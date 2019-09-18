@@ -54,35 +54,73 @@ dev.off()
 ## comparison of samples - log2
 
 ## log2FC data frame
-log2FC=data.frame(Gene=genes$Gene,
+gene_log2FC=data.frame(Gene=genes$Gene,
  REF1_vs_TKO=log2(genes$REF1/genes$TKOvs3), HIGH1_vs_LOW1=log2(genes$HIGH1/genes$LOW1),
  HIGH1_vs_MED1=log2(genes$HIGH1/genes$MED1), MED1_vs_LOW1=log2(genes$MED1/genes$LOW1))
 
-write.table(log2FC,"genes_comparisons.log2FC.txt",sep="\t", quote=F, row.names=F)
+write.table(gene_log2FC,"genes_comparisons.log2FC.txt",sep="\t", quote=F, row.names=F)
 
 pdf("gene.log2FC_distribution.pdf")
-plot(density(log2FC$REF1_vs_TKO, na.rm=T), xlab="Log2 Fold Change", main="", col="darkgrey")
-lines(density(log2FC$HIGH1_vs_LOW1,na.rm=T), col="darkred")
-lines(density(log2FC$HIGH1_vs_MED1, na.rm=T), col="red")
-lines(density(log2FC$MED1_vs_LOW1, na.rm=T), col="blue")
+plot(density(gene_log2FC$REF1_vs_TKO, na.rm=T), xlab="Log2 Fold Change", main="", col="darkgrey")
+lines(density(gene_log2FC$HIGH1_vs_LOW1,na.rm=T), col="darkred")
+lines(density(gene_log2FC$HIGH1_vs_MED1, na.rm=T), col="red")
+lines(density(gene_log2FC$MED1_vs_LOW1, na.rm=T), col="blue")
 abline(v=c(-1,1), col="red", lty=2)
 legend("topright", c("REF1 vs TKO","HIGH1 vs LOW1", "HIGH1 vs MED1", "MED1 vs LOW1"), 
 col=c("darkgrey","darkred","red","blue"), lty=1, lwd=2, bty="n", title="Comparison")
 dev.off()
 
 ## log2FC data frame
-log2FC=data.frame(Guide=guides$Guide, Gene=gsub("_.+","",guides$Guide),
+guide_log2FC=data.frame(Guide=guides$Guide, Gene=gsub("_.+","",guides$Guide),
  REF1_vs_TKO=log2(guides$REF1/guides$TKOvs3), HIGH1_vs_LOW1=log2(guides$HIGH1/guides$LOW1),
  HIGH1_vs_MED1=log2(guides$HIGH1/guides$MED1), MED1_vs_LOW1=log2(guides$MED1/guides$LOW1))
 
-write.table(log2FC,"guide_comparisons.log2FC.txt",sep="\t", quote=F, row.names=F)
+write.table(guide_log2FC,"guide_comparisons.log2FC.txt",sep="\t", quote=F, row.names=F)
 
 pdf("guide.log2FC_distribution.pdf")
-plot(density(log2FC$REF1_vs_TKO, na.rm=T), xlab="Log2 Fold Change", main="", col="darkgrey")
-lines(density(log2FC$HIGH1_vs_LOW1,na.rm=T), col="darkred")
-lines(density(log2FC$HIGH1_vs_MED1, na.rm=T), col="red")
-lines(density(log2FC$MED1_vs_LOW1, na.rm=T), col="blue")
+plot(density(guide_log2FC$REF1_vs_TKO, na.rm=T), xlab="Log2 Fold Change", main="", col="darkgrey")
+lines(density(guide_log2FC$HIGH1_vs_LOW1,na.rm=T), col="darkred")
+lines(density(guide_log2FC$HIGH1_vs_MED1, na.rm=T), col="red")
+lines(density(guide_log2FC$MED1_vs_LOW1, na.rm=T), col="blue")
 abline(v=c(-1,1), col="red", lty=2)
 legend("topright", c("REF1 vs TKO","HIGH1 vs LOW1", "HIGH1 vs MED1", "MED1 vs LOW1"), 
 col=c("darkgrey","darkred","red","blue"), lty=1, lwd=2, bty="n", title="Comparison")
 dev.off()
+
+
+### plot norm gene counts & log2FC for select genes
+guides$Gene=gsub("_.+","",guides$Guide)
+
+gene="INS"
+pdf(paste0(gene,".gene_barplot.pdf"), height=7)
+par(mfrow=c(2,1), las=2, mar=c(5.1,5.1,3,1), oma=c(4.5,0,0,0))
+barplot(as.numeric(subset(genes, Gene==gene)[,2:6]), names.arg=names(genes)[2:6], 
+ ylab="Norm gene counts", cex.names=1.2, cex.axis=1.2, cex.lab=1.2, 
+ col=c("grey","black","blue","white","red"), main=gene)
+  abline(h=0)
+
+barplot(as.numeric(subset(gene_log2FC, Gene=="INS")[,2:5]), names.arg=names(gene_log2FC)[2:5],
+ ylab="Gene log2FC", cex.names=1.2, cex.axis=1.2, cex.lab=1.2, col=c("grey","red","coral","blue"))
+ abline(h=0)
+dev.off()
+
+pdf(paste0(gene,".guide_barplot.pdf"), height=7)
+par(mfrow=c(2,1), las=2, mar=c(5.1,5.1,3,1), oma=c(4.5,0,0,0))
+m=data.matrix(subset(guides, Gene==gene)[,2:6])
+rownames(m)=paste0(gene,"_",1:nrow(m))
+barplot(m, beside=T,
+ ylab="Norm guide counts", cex.names=1.2, cex.axis=1.2, cex.lab=1.2, 
+ col=c(rep("grey",4),rep("black",4),rep("blue",4),rep("white",4),rep("red",4)), main=gene)
+  abline(h=0)
+
+m=data.matrix(subset(guide_log2FC, Gene=="INS")[,3:6])
+rownames(m)=paste0(gene,"_",1:nrow(m))
+
+barplot(m, beside=T,
+ ylab="Guide log2FC", cex.names=1.2, cex.axis=1.2, cex.lab=1.2, 
+ col=c(rep("grey",4),rep("red",4),rep("coral",4),rep("blue",4)))
+ abline(h=0)
+dev.off()
+
+
+#barplot(subset(guide_log2FC, Gene=="INS")[,c(1,3:6)])
