@@ -5,4 +5,4 @@ Analysis of the TKO CRISPR screen
 
 2. [Count tables](guide_count_table.R) - this script finds the guide summary files generated with the Perl script \*.guides.txt in the current working directory. Then merges them together into gene count tables, and guide tables, and normalizes them to the total number of detected guides.
 
-3. [Counts distribution & log2FC changes](TKOvs_analysis.R) - explore distribution of counts per gene and per guide; compare REF1 with TKO library, and HIGH vs LOW insulin samples, etc.
+3. [Counts distribution & log2FC changes](TKOv3_analysis.R) - explore distribution of counts per gene and per guide; compare REF1 with TKO library, and HIGH vs LOW insulin samples, etc.
