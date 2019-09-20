@@ -99,7 +99,7 @@ barplot(as.numeric(subset(genes, Gene==gene)[,2:6]), names.arg=names(genes)[2:6]
  col=c("grey","black","blue","white","red"), main=gene)
   abline(h=0)
 
-barplot(as.numeric(subset(gene_log2FC, Gene=="INS")[,2:5]), names.arg=names(gene_log2FC)[2:5],
+barplot(as.numeric(subset(gene_log2FC, Gene==gene)[,2:5]), names.arg=names(gene_log2FC)[2:5],
  ylab="Gene log2FC", cex.names=1.2, cex.axis=1.2, cex.lab=1.2, col=c("grey","red","coral","blue"))
  abline(h=0)
 dev.off()
@@ -113,7 +113,7 @@ barplot(m, beside=T,
  col=c(rep("grey",4),rep("black",4),rep("blue",4),rep("white",4),rep("red",4)), main=gene)
   abline(h=0)
 
-m=data.matrix(subset(guide_log2FC, Gene=="INS")[,3:6])
+m=data.matrix(subset(guide_log2FC, Gene==gene)[,3:6])
 rownames(m)=paste0(gene,"_",1:nrow(m))
 
 barplot(m, beside=T,
@@ -122,5 +122,3 @@ barplot(m, beside=T,
  abline(h=0)
 dev.off()
 
-
-#barplot(subset(guide_log2FC, Gene=="INS")[,c(1,3:6)])
